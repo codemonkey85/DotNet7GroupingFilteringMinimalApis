@@ -19,14 +19,14 @@ app.UseHttpsRedirection();
 var apiGroup = app.MapGroup("api");
 var personGroup = apiGroup.MapGroup("people");
 
-var people = new Person[] { new("Michael"), new("Shannan"), new("Caleb"), new("Ethan"), };
+var people = new Person[] { new(1, "Michael"), new(2, "Shannan"), new(3, "Caleb"), new(4, "Ethan"), };
 
 personGroup.MapGet("", () => people).AddEndpointFilter<PeopleFilter>();
-personGroup.MapGet("{id:int}", (int id) => people.FirstOrDefault());
+personGroup.MapGet("{id:int}", (int id) => people.FirstOrDefault(person => person.Id == id));
 
 app.Run();
 
-internal record Person(string Name);
+internal record Person(int Id, string Name);
 
 internal class PeopleFilter : IEndpointFilter
 {
